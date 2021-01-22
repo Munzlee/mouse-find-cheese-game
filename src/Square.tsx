@@ -10,6 +10,7 @@ export enum FieldType {
   Cheese,
   Wall,
   Mouse,
+  Way,
 }
 
 export function Square(props: ISquareProps) {
@@ -49,6 +50,8 @@ function getFieldColor(fieldType: FieldType) {
       return "yellow";
     case FieldType.Mouse:
       return "gray";
+    case FieldType.Way:
+      return "red";
     default:
       return "white";
   }

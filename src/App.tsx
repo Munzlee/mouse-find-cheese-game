@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from "react";
 import "./App.css";
-import { PrimaryButton, TextField } from "@fluentui/react";
+import { BaseButton, PrimaryButton, TextField } from "@fluentui/react";
 import { FieldType, Square } from "./Square";
+import { Bfs } from "./functionality/BFS";
 
 export interface ISquare {
   x: number;
@@ -17,6 +18,38 @@ function App() {
     { x: 1, y: 2, fieldType: FieldType.None },
     { x: 2, y: 2, fieldType: FieldType.None },
   ]);
+
+  const handleGenerateSquares = useCallback(
+    (
+      event: React.MouseEvent<
+        | HTMLAnchorElement
+        | HTMLButtonElement
+        | HTMLDivElement
+        | BaseButton
+        | HTMLSpanElement,
+        MouseEvent
+      >
+    ) => {
+      setSquares(generateSquares(size));
+    },
+    [size]
+  );
+
+  const handleFind = useCallback(
+    (
+      event: React.MouseEvent<
+        | HTMLAnchorElement
+        | HTMLButtonElement
+        | HTMLDivElement
+        | BaseButton
+        | HTMLSpanElement,
+        MouseEvent
+      >
+    ) => {
+      setSquares(new Bfs(squares).calc());
+    },
+    [squares]
+  );
   const handleOnSquareClick = useCallback(
     (x: number, y: number, f: FieldType) => {
       let index = squares.findIndex(
@@ -67,20 +100,15 @@ function App() {
         value={String(size)}
       />
       <PrimaryButton
-        onClick={(e) => {
-          let tmp = new Array<{
-            x: number;
-            y: number;
-            fieldType: FieldType;
-          }>();
-          for (let i = 1; i <= size; i++) {
-            for (let j = 1; j <= size; j++) {
-              tmp.push({ x: i, y: j, fieldType: FieldType.None });
-            }
-          }
-          setSquares(tmp);
-        }}
-      />
+        disabled={
+          !!squares.find((square) => square.fieldType === FieldType.Way)
+        }
+        onClick={handleFind}
+      >
+        Calc
+      </PrimaryButton>
+
+      <PrimaryButton onClick={handleGenerateSquares}>Generate</PrimaryButton>
       <div className="Grid">
         {squares.map(({ x, y, fieldType }) => (
           <Square
@@ -105,6 +133,20 @@ function App() {
         return FieldType.None;
     }
   }
+}
+
+function generateSquares(size: number) {
+  let tmp = new Array<{
+    x: number;
+    y: number;
+    fieldType: FieldType;
+  }>();
+  for (let i = 1; i <= size; i++) {
+    for (let j = 1; j <= size; j++) {
+      tmp.push({ x: i, y: j, fieldType: FieldType.None });
+    }
+  }
+  return tmp;
 }
 
 export default App;
