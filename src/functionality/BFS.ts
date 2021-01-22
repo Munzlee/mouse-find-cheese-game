@@ -121,7 +121,6 @@ export class Bfs {
   ) {
     let path = new Array<ISquareKordinates>();
     let prev = visited.reverse();
-    debugger;
     let currennext = 0;
     prev.forEach((e, i) => {
       if (e === endNode || e === startNode) {
