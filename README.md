@@ -1,5 +1,5 @@
-# Getting Started with Create React App
-
+# A path-finding game
+A path-finding game, where the mouse finds the cheese using BFS
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
