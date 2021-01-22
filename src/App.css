@@ -1,12 +1,41 @@
-.Grid {
-  display: grid;
-  grid-column-gap: 1px;
-  grid-row-gap: 1px;
-  grid-auto-columns: min-content;
+.container {
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  justify-content: center;
+}
+.content {
+  display: flex;
+  width: 70vw;
+  flex-direction: column;
+}
+body {
+  background-color: #333333;
 }
 
-.field {
-  border: 1px solid blue;
-  width: 20px;
-  height: 20px;
+.content .settings {
+  padding: 10px;
+  align-self: flex-start;
+  background-color: #252526;
+  width: inherit;
+}
+
+.ms-Label {
+  color: whitesmoke;
+}
+
+.ms-TextField {
+  padding-left: 5px;
+}
+.ms-TextField-field {
+  background-color: #3c3c3c;
+  color: whitesmoke;
+}
+
+.content .grid-container {
+  padding: 10px;
+  width: inherit;
+  height: 100%;
+  background-color: #1e1e1e;
 }

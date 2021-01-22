@@ -1,5 +1,5 @@
-import { ISquare } from "../App";
-import { FieldType } from "../Square";
+import { ISquare } from "../Grid/PlayGrid";
+import { FieldType } from "../Grid/Square";
 
 interface ISquareKordinates {
   x: number;
@@ -153,7 +153,9 @@ export class Bfs {
     });
 
     return this.squares.map((pr) =>
-      path.find((px) => px.x === pr.x && px.y === pr.y)
+      path.find((px) => px.x === pr.x && px.y === pr.y) &&
+      pr.fieldType !== FieldType.Cheese &&
+      pr.fieldType !== FieldType.Mouse
         ? { ...pr, fieldType: FieldType.Way }
         : pr
     );

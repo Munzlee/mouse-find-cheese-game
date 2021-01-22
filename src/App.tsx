@@ -1,14 +1,26 @@
-import React, { useCallback, useState } from "react";
+import {
+  BaseButton,
+  IStackItemStyles,
+  PrimaryButton,
+  Stack,
+  StackItem,
+  TextField,
+} from "@fluentui/react";
+import React, { useCallback, useMemo, useState } from "react";
 import "./App.css";
-import { BaseButton, PrimaryButton, TextField } from "@fluentui/react";
-import { FieldType, Square } from "./Square";
 import { Bfs } from "./functionality/BFS";
+import PlayGrid, { ISquare } from "./Grid/PlayGrid";
+import { FieldType } from "./Grid/Square";
 
-export interface ISquare {
-  x: number;
-  y: number;
-  fieldType: FieldType;
-}
+const stackItemStyles: IStackItemStyles = {
+  root: {
+    alignItems: "center",
+    padding: 5,
+    display: "flex",
+    height: 50,
+    justifyContent: "center",
+  },
+};
 
 function App() {
   const [size, setSize] = useState(2);
@@ -18,6 +30,32 @@ function App() {
     { x: 1, y: 2, fieldType: FieldType.None },
     { x: 2, y: 2, fieldType: FieldType.None },
   ]);
+
+  const handleSizeChange = useCallback(
+    (
+      event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+      newValue?: string | undefined
+    ) => {
+      if (Number(newValue ?? "2") <= 35) {
+        setSize(Number(newValue ?? "2"));
+      } else {
+        setSize(35);
+      }
+    },
+    []
+  );
+
+  const handleOnSquareChange = useCallback((squareArray: ISquare[]) => {
+    setSquares(squareArray);
+  }, []);
+
+  const generateDisabled = useMemo(() => {
+    return (
+      !squares.find((square) => square.fieldType === FieldType.Way) &&
+      !squares.find((square) => square.fieldType === FieldType.Cheese) &&
+      !squares.find((square) => square.fieldType === FieldType.Mouse)
+    );
+  }, [squares]);
 
   const handleGenerateSquares = useCallback(
     (
@@ -50,89 +88,35 @@ function App() {
     },
     [squares]
   );
-  const handleOnSquareClick = useCallback(
-    (x: number, y: number, f: FieldType) => {
-      let index = squares.findIndex(
-        (pred) => pred.fieldType === f && pred.x === x && pred.y === y
-      );
-
-      let item = squares[index];
-      if (getNewFieldType({ ...item }) === FieldType.Mouse) {
-        item.fieldType = getNewFieldType(item);
-        squares[index] = item;
-        setSquares(
-          squares.map((pr, i) => {
-            if (i !== index && pr.fieldType === FieldType.Mouse) {
-              return { ...pr, fieldType: FieldType.None };
-            } else {
-              return { ...pr };
-            }
-          })
-        );
-      } else if (getNewFieldType({ ...item }) === FieldType.Cheese) {
-        item.fieldType = getNewFieldType(item);
-        squares[index] = item;
-        setSquares(
-          squares.map((pr, i) => {
-            if (i !== index && pr.fieldType === FieldType.Cheese) {
-              return { ...pr, fieldType: FieldType.None };
-            } else {
-              return { ...pr };
-            }
-          })
-        );
-      } else {
-        item.fieldType = getNewFieldType(item);
-        squares[index] = item;
-        setSquares([...squares]);
-      }
-    },
-    [squares]
-  );
 
   return (
-    <div>
-      <TextField
-        label="Size"
-        onChange={(e, str) => {
-          setSize(Number(str ?? "2"));
-        }}
-        value={String(size)}
-      />
-      <PrimaryButton
-        disabled={
-          !!squares.find((square) => square.fieldType === FieldType.Way)
-        }
-        onClick={handleFind}
-      >
-        Calc
-      </PrimaryButton>
-
-      <PrimaryButton onClick={handleGenerateSquares}>Generate</PrimaryButton>
-      <div className="Grid">
-        {squares.map(({ x, y, fieldType }) => (
-          <Square
-            x={x}
-            y={y}
-            fieldType={fieldType}
-            onChange={handleOnSquareClick}
+    <div className="container">
+      <div className="content">
+        <div className="settings">
+          <TextField
+            label="Size:"
+            onChange={handleSizeChange}
+            value={String(size)}
           />
-        ))}
+          <Stack horizontal disableShrink>
+            <StackItem styles={stackItemStyles}>
+              <PrimaryButton disabled={generateDisabled} onClick={handleFind}>
+                Find Cheese
+              </PrimaryButton>
+            </StackItem>
+            <StackItem styles={stackItemStyles}>
+              <PrimaryButton onClick={handleGenerateSquares}>
+                Generate
+              </PrimaryButton>
+            </StackItem>
+          </Stack>
+        </div>
+        <div className="grid-container">
+          <PlayGrid onSquaresChange={handleOnSquareChange} squares={squares} />
+        </div>
       </div>
     </div>
   );
-  function getNewFieldType(item: ISquare) {
-    switch (item.fieldType) {
-      case FieldType.None:
-        return FieldType.Wall;
-      case FieldType.Wall:
-        return FieldType.Cheese;
-      case FieldType.Cheese:
-        return FieldType.Mouse;
-      default:
-        return FieldType.None;
-    }
-  }
 }
 
 function generateSquares(size: number) {
