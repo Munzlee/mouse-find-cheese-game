@@ -6,6 +6,7 @@ interface ISquareProps {
   x: number;
   y: number;
   fieldType: FieldType;
+  className: string;
   onChange: (x: number, y: number, fieldType: FieldType) => void;
 }
 export enum FieldType {
@@ -34,7 +35,7 @@ export function Square(props: ISquareProps) {
   return (
     <div
       onClick={handleOnclick}
-      className="field"
+      className={props.className}
       style={{
         gridColumn: props.x,
         gridRow: props.y,

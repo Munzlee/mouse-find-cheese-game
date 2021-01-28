@@ -7,7 +7,7 @@ import {
   TextField,
 } from "@fluentui/react";
 import React, { useCallback, useMemo, useState } from "react";
-import "./App.css";
+import styles from "./App.module.css";
 import { Bfs } from "./functionality/BFS";
 import PlayGrid, { ISquare } from "./Grid/PlayGrid";
 import { FieldType } from "./Grid/Square";
@@ -90,13 +90,14 @@ function App() {
   );
 
   return (
-    <div className="container">
-      <div className="content">
-        <div className="settings">
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <div className={styles.settings}>
           <TextField
             label="Size:"
             onChange={handleSizeChange}
             value={String(size)}
+            className={styles.textField}
           />
           <Stack horizontal disableShrink>
             <StackItem styles={stackItemStyles}>
@@ -111,9 +112,7 @@ function App() {
             </StackItem>
           </Stack>
         </div>
-        <div className="grid-container">
-          <PlayGrid onSquaresChange={handleOnSquareChange} squares={squares} />
-        </div>
+        <PlayGrid onSquaresChange={handleOnSquareChange} squares={squares} />
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ export class Bfs {
     ];
   }
 
-  public solve(
+  private solve(
     startNode: ISquareKordinates,
     endNode: ISquareKordinates
   ): ISquareKordinates[] | undefined {

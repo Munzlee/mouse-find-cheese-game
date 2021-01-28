@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import "./PlayGrid.css";
+import styles from "./PlayGrid.module.css";
 import { FieldType, Square } from "./Square";
 
 export interface ISquare {
@@ -8,12 +8,11 @@ export interface ISquare {
   fieldType: FieldType;
 }
 
-function PlayGrid(props:{squares:ISquare[],onSquaresChange:(squareArr:ISquare[]) => void}) {
- 
- 
-const {squares,onSquaresChange} =props;
-  
-
+function PlayGrid(props: {
+  squares: ISquare[];
+  onSquaresChange: (squareArr: ISquare[]) => void;
+}) {
+  const { squares, onSquaresChange } = props;
 
   const handleOnSquareClick = useCallback(
     (x: number, y: number, f: FieldType) => {
@@ -54,15 +53,14 @@ const {squares,onSquaresChange} =props;
     },
     [onSquaresChange, squares]
   );
-
   return (
-    <div>
-    
-      <div className="Grid">
+    <div className={styles.gridContainer}>
+      <div className={styles.Grid}>
         {squares.map(({ x, y, fieldType }) => (
           <Square
             x={x}
             y={y}
+            className={styles.field}
             fieldType={fieldType}
             onChange={handleOnSquareClick}
           />
@@ -83,6 +81,5 @@ const {squares,onSquaresChange} =props;
     }
   }
 }
-
 
 export default PlayGrid;
